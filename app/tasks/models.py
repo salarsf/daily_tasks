@@ -14,3 +14,6 @@ class Task(models.Model):
     def __str__(self):
         name = f"{self.user}-{self.date}-{self.body[:10]}..."
         return name
+
+    class Meta:
+        ordering = ["date"]
