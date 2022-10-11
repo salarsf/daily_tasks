@@ -1,4 +1,4 @@
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -10,15 +10,14 @@ from .serializers import TaskSerializer
 # Create your views here.
 
 
-class TaskList(APIView):
+class TaskList(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
-        tasks = Task.objects.filter(user=request.user).all()
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user).all()
 
-    def post(self, request, format=None):
+    def create(self, request, *args, **kwargs):
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -26,11 +25,10 @@ class TaskList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TodayTask(APIView):
+class TodayTask(generics.ListAPIView):
+    serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
+    def get_queryset(self):
         today = datetime.date.today()
-        tasks = Task.objects.filter(user=request.user, date=today)
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+        return Task.objects.filter(user=self.request.user, date=today)
