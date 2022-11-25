@@ -16,6 +16,7 @@ services:
     container_name: "redis"
   celery:
     build: ./app
+    container_name: 'celery'
     command: celery -A config worker -l INFO
     volumes:
     - ./app:/app
@@ -24,3 +25,15 @@ services:
     depends_on:
       - app
       - redis
+  celery-beat:
+    build: ./app
+    container_name: 'celery_beat'
+    command: celery -A config beat -l INFO
+    volumes:
+      - ./app:/app
+    env_file:
+      - './app.env'
+    depends_on:
+      - app
+      - redis
+      - celery
