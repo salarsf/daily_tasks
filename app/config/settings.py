@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from environs import Env
+from celery.schedules import crontab
 
 env = Env()
 env.read_env()
@@ -137,6 +138,14 @@ LOGIN_REDIRECT_URL = 'api:task_list'
 # Celery settings
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+
+CELERY_TIMEZONE = 'Asia/Tehran'
+CELERY_BEAT_SCHEDULE = {
+    "daily_mails_task": {
+        "task": "tasks.tasks.send_daily_mails",
+        "schedule": crontab(minute='0', hour='9')
+    }
+}
 
 # email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

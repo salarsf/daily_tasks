@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.http import Http404
-import datetime
 from .models import Task
 from .serializers import TaskSerializer
 from .permissions import IsTaskOwner
@@ -58,5 +57,4 @@ class TodayTask(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        today = datetime.date.today()
-        return Task.objects.filter(user=self.request.user, date=today)
+        return Task.objects.get_todays_tasks_for_user(user=self.request.user)

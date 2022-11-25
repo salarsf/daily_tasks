@@ -5,3 +5,4 @@ db.sqlite3
 notes.txt
 __pycache__/
 app.env
+celerybeat-schedule
