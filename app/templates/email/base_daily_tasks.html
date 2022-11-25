@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Daily Tasks</h1>
+    <p>Hello {{ user }}</p>
+    <p>Today's tasks:</p>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.body }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
